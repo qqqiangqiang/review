@@ -42,10 +42,10 @@ async(function(){
 
 ### 3、异步解决方案
 
-####3.1 promise
+#### 3.1 promise
 <a href="https://github.com/qqqiangqiang/createPromise">见promise实现原理 </a>
 
-####3.2 async/await
+#### 3.2 async/await
 
 ```javascript
 // Co.js
