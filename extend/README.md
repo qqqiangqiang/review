@@ -1,5 +1,5 @@
 ### 继承相关
-#### Object. create
+#### Object.create
 object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的``__proto__``
 
 ```javascript
