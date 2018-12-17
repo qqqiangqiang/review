@@ -59,8 +59,8 @@ const everyConfig = [
   }
 ]
 
-const final_config = everyConfig.map((item) => {
-  return {...base_config, ...item};
-})
-
+const final_config = everyConfig.map(item => {
+  let obj = Object.assign({}, base_config);
+  return Object.assign(obj, item);
+});
 module.exports = final_config;

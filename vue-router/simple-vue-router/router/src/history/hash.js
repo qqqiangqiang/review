@@ -40,12 +40,12 @@ export class HashHistory extends Base {
 }
 
 function changeUrl(path, replace) {
-  const href = window.location.href
-  const i = href.indexOf('#')
-  const base = i >= 0 ? href.slice(0, i) : href
-  if (replace) {
-    window.history.replaceState({}, '', `${base}#/${path}`)
-  } else {
-    window.history.pushState({}, '', `${base}#/${path}`)
-  }
+  // const href = window.location.href
+  // const i = href.indexOf('#')
+  // const base = i >= 0 ? href.slice(0, i) : href
+  // if (replace) {
+  //   window.history.replaceState({}, '', `${base}#/${path}`)
+  // } else {
+  //   window.history.pushState({}, '', `${base}#/${path}`)
+  // }
 }
