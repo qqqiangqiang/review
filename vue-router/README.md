@@ -15,3 +15,8 @@ history.pushState(stateObject, title, url)，包括三个参数。
 #### onpopstate
 该事件是window的属性。该事件会在调用浏览器的前进、后退以及执行history.forward、history.back、和history.go触发，因为这些操作有一个共性，即修改了历史堆栈的当前指针。在不改变document的前提下，一旦当前指针改变则会触发onpopstate事件。
 
+#### simple-vue-router实例
+进入 ``simple-vue-router/router``目录
+启动方式
+- ``yarn``
+- ``npm run build``
