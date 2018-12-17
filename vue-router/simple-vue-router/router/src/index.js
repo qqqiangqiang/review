@@ -1,4 +1,5 @@
 import { HashHistory } from './history/hash'
+import { HTML5History } from './history/html5'
 import { Watcher } from './util/watcher.js'
 import { Observe } from './util/observer.js'
 

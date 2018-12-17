@@ -1,10 +1,17 @@
 // https://github.com/shelljs/shelljs
+require('shelljs/global');
 process.env.NODE_ENV = 'production';
 
 const path = require('path');
 const os = require('os');
 const run = require('parallel-webpack').run;
 const configPath = require.resolve('./webpack.config.js');
+
+const removeHashMain = path.join(__dirname, '../example/hash/main.*.js')
+const removeHistoryMain = path.join(__dirname, '../example/history/main.*.js')
+
+rm('-rf', removeHashMain)
+rm('-rf', removeHistoryMain)
 
 run(configPath, {
   watch: false,

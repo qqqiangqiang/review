@@ -54,6 +54,7 @@ function getLocation (base = ''){
 }
 
 function changeUrl(base, path, replace) {
+  console.log('>>>>', base + path)
   if (replace) {
     window.history.replaceState({}, '', (base + path).replace(/\/\//g, '/'))
   } else {

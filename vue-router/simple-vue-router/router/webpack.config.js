@@ -31,7 +31,6 @@ const everyConfig = [
       filename: '[name].[hash:8].js'
     },
     plugins: [
-      new CleanWebpackPlugin([path.join(__dirname, 'dist')]),
       new HtmlWebpackPlugin({
         inject: 'head',
         template: path.resolve(__dirname, '../example/hash/template.html'), // 指定产出的html模板
@@ -48,7 +47,6 @@ const everyConfig = [
       filename: '[name].[hash:8].js'
     },
     plugins: [
-      new CleanWebpackPlugin([path.join(__dirname, 'dist')]),
       new HtmlWebpackPlugin({
         inject: 'head',
         template: path.resolve(__dirname, '../example/history/template.html'), // 指定产出的html模板
