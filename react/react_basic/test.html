@@ -1,0 +1,61 @@
+<!DOCTYPE>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    // react节点原型类
+    function ReactElement(type, props) {
+      this.type = type;
+      this.props = props;
+    }
+    const React = {
+      // tagname props chilreen
+      createElement(type, props, ...childrens) {
+        if (childrens.length === 1) {
+          childrens = childrens[0];
+        }
+        return new ReactElement(type, {...props, childrens })
+      },
+      render(elObj, container) {
+        const { type, props } = elObj;
+        if (!type) return;
+        const node = document.createElement(type);
+        for (let key in props) {
+          const prop = props[key];
+          // childrens属性
+          if (key === 'childrens') {
+            if (Array.isArray(prop)) {
+              for (let prop_children of prop) {
+                React.render(prop_children, node);
+              }              
+            } else if (typeof prop === 'object') {
+              React.render(prop, node);
+            } else {
+              node.innerHTML =  prop;
+            }
+          } else {
+            // 节点属性
+            if (key === 'className') {
+              node.setAttribute('class', prop)
+            } else {
+              node.setAttribute(key, prop);
+            }
+          }
+        }
+        container.appendChild(node);
+      }
+    }
+    // JSX其实是一个语法糖
+    React.render(
+      React.createElement('div', { className: 'test' } , 'hello', React.createElement('span', null, 'react')),
+      document.querySelector('#app')
+    );
+    </script>
+</body>
+</html>
