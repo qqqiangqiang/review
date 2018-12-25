@@ -77,3 +77,99 @@ function render(elObj, container) {
   container.appendChild(node);
 }
 ```
+---
+## 性能优化
+### 1.使用生产版本（资源的压缩）
+- 开发应用时使用开发模式，部署应用时换为生产模式
+#### Create React App 模式
+```javascript
+npm run build
+```
+#### 单文件构建
+```javascript
+<script src="https://unpkg.com/react@15/dist/react.min.js"></script>
+<script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+```
+#### webpack
+```javascript
+new webpack.DefinePlugin({
+  'process.env': {
+    NODE_ENV: JSON.stringify('production')
+  }
+}),
+new webpack.optimize.UglifyJsPlugin()
+```
+### 2.shouldComponentUpdate/PureComponent
+默认情况下，只要调用setState()，便会触发react的重新渲染。
+因此，一条修改方案便是我们重写shouldComponentUpdate函数，手动比较state是否发生改变。
+
+```javascript
+import react, { component } from 'react';
+class demo extends component {
+  constructor(props) {
+    super();
+    this.state = {
+      name: 'xxx'
+    }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.name === this.state.name) {
+      return false
+    } else {
+      return true;
+    }
+  }
+}
+```
+
+###3.React.PureComponent
+React.PureComponent 与 React.Component 完全相同，但是在shouldComponentUpdate()中实现时，使用了 props 和 state 的浅比较
+
+```javascript
+// 实现原理
+class PureComponent extends Component {
+  constructor() {
+    this.state = {
+      data: []
+    }
+  }
+  // 比较属于浅比较，只关心引用地址是否改变，如果是同一个引用地址，但是里面的元素变了的话，也将认为数据没有改变，组件将不会重新渲染
+  // 解决方案类似handleClick处理，重新结构一个新的值，改变引用地址，但会导致不必要的内存开销
+  // 如果直接改成深比较，则CPU占用率过大
+  shouldComponentUpdate(nextProps, nextState) {
+    for(let prop in nextProps) {
+      if (nextProps[prop] !== this.props[prop]) {
+        return true
+      }
+    }
+    for(let prop in nextState) {
+      if (nextState[prop] !== this.nextState[prop]) {
+        return true
+      }
+    }
+    return false
+  }
+  handleClick = (e) => {
+    let val = e.target.value;
+    this.state.data.push(val);
+    this.setState({ todos: [...this.state.data]}) 
+  }
+}
+```
+
+### 4.immutable
+最主要目的：减少复制数据结构所带来的内存开销。
+- 不可变(Immutable): 一个集合一旦创建，在其他时间是不可更改的。
+- 持久的(Persistent): 新的集合可以基于之前的结合创建并产生突变，例如：set。原来的集合在新集合创建之后仍然是可用的。
+- 结构共享(Structural Sharing): 新的集合尽可能通过之前集合相同的结构创建，最小程度地减少复制操作来提高性能。
+
+```javascript
+import { is } from 'immutable';
+shouldComponentUpdate: (nextProps, nextState) => {
+return !(this.props === nextProps || is(this.props, nextProps)) ||
+       !(this.state === nextState || is(this.state, nextState));
+}
+// 改变setState
+this.setState({ data: this.state.data.update('counter', counter => counter + 1) });
+```
+
