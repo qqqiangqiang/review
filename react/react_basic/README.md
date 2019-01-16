@@ -173,3 +173,261 @@ return !(this.props === nextProps || is(this.props, nextProps)) ||
 this.setState({ data: this.state.data.update('counter', counter => counter + 1) });
 ```
 
+### 5.Context（上下文）
+- 1、在父组件里定义 childContextType 子上下文类型
+- 2、在父组件里还要定义一个 getChildContext 用来返回上下文对象，在子组件里接收到的对象
+- 3、在要接收这些上下文对象的组件里，定义 contextTypes
+```javascript
+import React,{Component} from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+class Header extends Component{
+    render() {
+        return (
+            <div>
+                <Title/>
+            </div>
+        )
+    }
+}
+class Title extends Component{
+    static contextTypes={
+        color:PropTypes.string
+    }
+    render() {
+        return (
+            <div style={{color:this.context.color}}>
+                Title
+            </div>
+        )
+    }
+}
+class Main extends Component{
+    render() {
+        return (
+            <div>
+                <Content>
+                </Content>
+            </div>
+        )
+    }
+}
+class Content extends Component{
+    static contextTypes={
+        color: PropTypes.string,
+        changeColor:PropTypes.func
+    }
+    render() {
+        return (
+            <div style={{color:this.context.color}}>
+                Content
+                <button onClick={()=>this.context.changeColor('green')}>绿色</button>
+                <button onClick={()=>this.context.changeColor('orange')}>橙色</button>
+            </div>
+        )
+    }
+}
+class Page extends Component{
+    constructor() {
+        super();
+        this.state={color:'red'};
+    }
+    static childContextTypes={
+        color: PropTypes.string,
+        changeColor:PropTypes.func
+    }
+    getChildContext() {
+        return {
+            color: this.state.color,
+            changeColor:(color)=>{
+                this.setState({color})
+            }
+        }
+    }
+    render() {
+        return (
+            <div>
+                <Header/>
+                <Main/>
+            </div>
+        )
+    }
+}
+ReactDOM.render(<Page/>,document.querySelector('#root'));
+```
+
+### 6.高阶组件
+- 高阶组件就是一个函数，用来封装重复的逻辑
+- 穿进去一个老组件，放回一个新组件
+```javascript
+// local.js
+export default function(OldComponent, name, placeholder) {
+  class NewComponent extends Componenet {
+    constructor() {
+      super();
+      this.state = {
+        data: ''
+      }
+    }
+    componentDidMount() {
+      this.setState({ data: localstorage.getItem(name) || placeholder })
+    }
+    handleChange = () => {
+      localstorage.setItem(name, e.target.value);
+    }
+    render() {
+      return </OldComponent data={this.state.data} save={this.handleChange}>
+    }
+  }
+  return NewComponent;
+}
+// userName.js
+import local from './local.js';
+class UserName extends Component {
+  render() {
+    return （
+      <label>用户名</label>
+      <input defaultValue={this.props.value} onChange={this.props.save} />
+    ）
+  }
+}
+export default local(UserName, 'userName', '请输入用户名');
+```
+
+### 7.fragments
+React 中一个常见模式是为一个组件返回多个元素。 片段(fragments) 可以让你将子元素列表添加到一个分组中，并且不会在DOM中增加额外节点。
+
+```javascript
+// demo
+export default class Message extends Component {
+  constructor() {
+    super();
+    this.state = {
+      message: [1,2,3]
+    }
+  }
+  render() {
+    return (
+      <ul>
+        { this.state.message.map((item,key) => <li key={key}>item</li>) }
+      </ul>
+    )
+  }
+} 
+
+// demo优化
+class List extends Componenet {
+  return (
+    <React.Fragment>
+      { this.props.message.map((item,key) => <li key={key}>item</li>) }
+    </React.Fragment>
+  )
+}
+export default class Message extends Component {
+  constructor() {
+    super();
+    this.state = {
+      message: [1,2,3]
+    }
+  }
+  render() {
+    return (
+      <ul>
+        <List message={this.state.message}>
+      </ul>
+    )
+  }
+} 
+
+```
+
+### 8.插槽
+Portals 提供了一种很好的方法，将子节点渲染到父组件 DOM 层次结构之外的 DOM 节点。
+> ReactDOM.createPortal(child, container)
+- 第一个参数（child）是任何可渲染的 React 子元素，例如一个元素，字符串或 片段(fragment)
+- 第二个参数（container）则是一个 DOM 元素
+
+```javascript
+import React,{Component} from 'react';
+import ReactDOM from 'react-dom';
+import './modal.css';
+
+class Modal extends Component{
+    constructor() {
+        super();
+        this.modal=document.querySelector('#modal-root');
+    }
+    render() {
+        return ReactDOM.createPortal(this.props.children,this.modal);
+    }
+}
+class Page extends Component{
+    constructor() {
+        super();
+        this.state={show:false};
+    }
+    handleClick=() => {
+        this.setState({show:!this.state.show});
+    }
+    render() {
+        return (
+            <div>
+                <button onClick={this.handleClick}>显示模态窗口</button>
+                {
+                    this.state.show&&<Modal>
+                    <div id="modal" className="modal">
+                        <div className="modal-content" id="modal-content">
+                                内容
+                                <button onClick={this.handleClick}>关闭</button>
+                        </div>
+                    </div>
+                </Modal>
+                }
+            </div>
+        )
+    }
+}
+ReactDOM.render(<Page/>,document.querySelector('#root'));
+```
+
+### 9.错误边界
+部分 UI 中的 JavaScript 错误不应该破坏整个应用程序。 为了解决 React 用户的这个问题，React 16引入了一个 “错误边界(Error Boundaries)” 的新概念。
+
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+class ErrorBoundary extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state={hasError:false};
+    }
+    componentDidCatch(err,info) {
+        this.setState({hasError: true});
+    }
+    render() {
+        if (this.state.hasError) {
+            return <h1>Something Went Wrong</h1>
+        }
+        return this.props.children;
+    }
+}
+
+class Page extends React.Component{
+    render() {
+        return (
+            <ErrorBoundary>
+                <Clock/>
+            </ErrorBoundary>
+        )
+    }
+}
+class Clock extends React.Component{
+    render() {
+        return (
+            <div>hello{null.toString()}</div>
+        )
+    }
+}
+
+ReactDOM.render(<Page/>,document.querySelector('#root'));
+```

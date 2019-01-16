@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+// 脚本语言的第一行，目的就是指出，你想要你的这个文件中的代码用什么可执行程序去运行它，就这么简单
+let argv = require('yargs')
+.option('n', {
+    alias: 'name',  // 别名 -n / --name
+    demand: true,   // 必填
+    default: 'dongzhiqiang', // 默认值
+    describe: '请输入你的名字', // 描述
+    type: 'string',
+  })
+  .usage('Usage: hello [options]')
+  .example('hello -n dongzhiqiang', 'say hello to dongzhiqiang')
+  .help('h')
+  .alias('h', 'help')
+  .epilog('copyright 2018')
+  .argv
+console.log('hello', argv);
