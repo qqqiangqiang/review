@@ -38,7 +38,20 @@ console.log(books.has('js'));
 books.clear();//清空 set
 console.log(books.size);
 ```
-
 #### 
 
+### 今日头条
+```javascript
+// 实现一个render('a+b=${name}')({ name: 'dzq' })
+function render(str) {
+  return function(data) {
+    str = str.replace(/\$\{(\w+)\}/g, (match1, match2) => {
+      return data[match2]
+    })
+    return str;
+  }
+}
+// 实现一个body-parser
+
+```
 

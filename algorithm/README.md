@@ -160,3 +160,20 @@ function deepClone(obj) {
   return child;
 }
 ```
+
+### 汉诺塔问题
+倒推：最后一步操作，都是由a移到c 或者是由b移到c
+```javascript
+function hannuo(cur, src, temp, dist) {
+  if (cur > 0) {
+    // src：'A', temp: 'B', dist: 'C'
+    // 第一步，将cur 从 A柱移到B柱，C柱是辅助柱子
+    hannuo(cur - 1, src, dist, temp)
+    // 移动盘子
+    console.log('Move disc ' + cur + ' from ' + src + ' to ' + dist);
+    // 第三步，将cur 
+    hannuo(cur - 1, temp, src, dist)
+  }
+}
+hannuo(3, 'A', 'B', 'C')
+```
