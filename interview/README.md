@@ -38,7 +38,6 @@ console.log(books.has('js'));
 books.clear();//清空 set
 console.log(books.size);
 ```
-#### 
 
 ### 今日头条
 ```javascript
@@ -54,4 +53,25 @@ function render(str) {
 // 实现一个body-parser
 
 ```
+
+### 瓜子二手车
+#### 解析url的query参数
+```javascript
+// 正则
+let str = 'https://lfq.qufenqi.com/v2/home?name=dzq&age=39';
+function query(str) {
+  let params = {};
+  str.replace(/(\w+)=(\w+)/g, (match, match1, macht2) => {
+    params[match1] = macht2;
+  })
+  return params;
+}
+```
+
+### 小米
+#### https详细过程
+https://baijiahao.baidu.com/s?id=1570143475599137&wfr=spider&for=pc&isFailFlag=1
+
+#### 链表
+
 
