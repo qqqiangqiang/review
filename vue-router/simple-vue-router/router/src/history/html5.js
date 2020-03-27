@@ -1,7 +1,7 @@
-import {Base, match} from './base'
+import { Base, match } from './base'
 
 export class HTML5History extends Base {
-  constructor (router) {
+  constructor(router) {
     super(router)
     window.addEventListener('popstate', () => {
       this.transitionTo(getLocation())
@@ -14,7 +14,8 @@ export class HTML5History extends Base {
    * @example this.push({name: 'home'})
    * @example this.push('/')
    */
-  push (location) {
+  push(location) {
+    debugger
     const targetRoute = match(location, this.router.routes)
 
     this.transitionTo(targetRoute, () => {
@@ -36,16 +37,16 @@ export class HTML5History extends Base {
     })
   }
 
-  go (n) {
+  go(n) {
     window.history.go(n)
   }
 
-  getCurrentLocation () {
+  getCurrentLocation() {
     return getLocation(this.router.base)
   }
 }
 
-function getLocation (base = ''){
+function getLocation(base = '') {
   let path = window.location.pathname
   if (base && path.indexOf(base) === 0) {
     path = path.slice(base.length)

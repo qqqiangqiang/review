@@ -23,8 +23,8 @@ a.dzq_call({ data: 'dzq' }, ['dzq', 20]);
  */
 var test1 = '20' + 5 - '4';
 var test2 = '20' + 5 + '4';
-console.log(typeof test1, typeof test2);
-
+console.log(typeof test1, typeof test2); 
+// number string
 
 /**
  * 3.
@@ -42,6 +42,7 @@ function add(n) {
 }
 z = add(x)
 console.log(x + ' ' + y + ' ' + z)
+// 1 4 4
 
 /**
  * 4.引用类型指向问题
